@@ -1,0 +1,44 @@
+#!/bin/csh -e
+# give
+# sync this toolbox to web distribution directory
+
+set there = ~fessler/web/irt/irt
+if !(-e $there) then
+	echo "error - no $there"
+	exit -1
+endif
+
+set ftar = fessler.tgz
+set here_files = "readme readme-pc setup.m ir_mex_build.m"
+set here_dirs = "align blob contrib ct data doc emission example fbp freemat general graph help-pc mex mri mri-rf nufft octave penalty reproduce systems transmission utilities wls"
+
+#
+# sync file trees
+#
+echo "$0 : rsync file trees to $there"
+if 1 then
+	set noglob
+	set excl = ( --exclude='.swp')
+	set opts = ( --verbose --progress  --recursive --update --links \
+		--perms --times --rsh=ssh --compress --delete-after)
+	rsync --dry-run $opts $excl $here_dirs $here_files $there
+	echo -n "$0 : rsync commit? [n/y] "
+	set answer = $<
+	if ("$answer" == "y") then
+		rsync $opts $excl $here_dirs $here_files $there
+	else
+		echo "$0 : need reply 'y' to invoke rsync"
+		exit -1
+	endif
+endif
+
+#
+# make tar file, then sync web
+#
+if 1 then
+	set mri_exclude = irt/mri-rf/SPSPpulseset.mat
+	echo "$0 : making tar file"
+	cd $there/..
+	tar --exclude=$mri_exclude -z -cf $ftar irt # $here_dirs $here_files
+	ru -t www -k -a
+endif

@@ -1,0 +1,26 @@
+de_ftab_inv1 test
+
+./matlab/alg/contrib/grissom-mri-rf-large-tip/Gmri_SENSE.m -> fatrix2
+
+lsqlin in wls_simplex
+dwt...
+
+test_all_ct
+	?
+	optimset 'largescale'
+	
+test_all_example
+	?
+
+mri_cs_ist_example
+
+
+also, replace all x'y with dot_double!
+
+"calllib" instead of mex?
+
+
+axisx => xlim
+axisy => ylim
+
+2015-07-04: moved read.m to ir_read_op.m
